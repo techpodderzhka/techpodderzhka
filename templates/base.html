@@ -1,0 +1,72 @@
+{% load static %} {% load group_tags %}
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Служба технической поддержки{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <header class="site-header">
+        <div class="container header-inner">
+          <h1 class="site-title">
+            <a href="http://tech-podderjka64583-site.home.onhh.ru/">Служба технической поддержки</a>
+          </h1>
+          <nav class="site-nav">
+            {% if user.is_authenticated %}
+            <div class="nav-left">
+              <a href="http://tech-podderjka64583-site.home.onhh.ru/"> Главная страница <a>
+              <a href="{% url 'main' %}">Оставить заявку</a>
+              {% if user|has_group:"admin" %}
+              <a href="{% url 'forms_list' %}">Список заявок</a>
+              {% elif user|has_group:"employee" %}
+              <a href="{% url 'my_forms' %}">Мои заявки</a>
+              {% endif %}
+              <a href="{% url 'faq' %}">FAQ</a>
+            </div>
+            <div class="nav-right">
+              <span class="username">{{ user.username }}</span>
+              <form
+                method="post"
+                action="{% url 'logout' %}"
+                style="display: inline"
+              >
+                {% csrf_token %}
+                <button type="submit" class="logout-button">Выйти</button>
+              </form>
+            </div>
+            {% else %}
+            <div class="nav-unauthenticated">
+              <a href="http://tech-podderjka64583-site.home.onhh.ru/"> Главная страница <a>
+              <a href="{% url 'main' %}">Оставить заявку</a>
+              <a href="{% url 'faq' %}">FAQ</a>
+              <a href="{% url 'login' %}">Войти</a>
+            </div>
+            {% endif %}
+          </nav>
+        </div>
+      </header>
+
+      <hr class="header-separator" />
+
+      <main class="content-wrapper">
+        <div class="container content">{% block content %} {% endblock %}</div>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container">
+          <p>Copyright © 2025 Служба технической поддержки</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

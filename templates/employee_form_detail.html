@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% load static %} {% block title %}Детали
+заявки{%endblock%} {%block content%}
+
+<div class="form-detail-content">
+  <h2>Заявка #{{ form.form_id }}</h2>
+
+  <ul>
+    <li><strong>Имя:</strong> {{ form.name }}</li>
+    <li><strong>Email:</strong> {{ form.email }}</li>
+    <li><strong>Телефон:</strong> {{ form.phone }}</li>
+    <li><strong>Категория:</strong> {{ form.category }}</li>
+    <li><strong>Комментарий пользователя:</strong> {{ form.comment }}</li>
+    <li>
+      <strong>Дата подачи:</strong> {{ form.submitted_at|date:"d.m.Y H:i" }}
+    </li>
+    <li><strong>Статус:</strong> {{ form.status }}</li>
+  </ul>
+
+  <h3>Статус назначения</h3>
+  <ul>
+    <li><strong>Статус:</strong> {{ assignment.status }}</li>
+    <li>
+      <strong>Дата назначения:</strong>
+      {{assignment.assigned_at | date:"d.m.Y H:i"}}
+    </li>
+    <li>
+      <strong>Дата завершения:</strong>
+      {%if assignment.finished_at%} {{assignment.finished_at|date:"d.m.YH:i"}}
+      {%else%}—{% endif %}
+    </li>
+  </ul>
+
+  {% if assignment.status != "завершен" %}
+  <form method="post" style="margin-top: 20px">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success">
+      Завершить работу над заявкой
+    </button>
+  </form>
+  {% else %}
+  <p>Заявка уже завершена.</p>
+  {% endif %}
+
+  <a href="{% url 'my_forms' %}">← Назад к моим заявкам</a>
+</div>
+{% endblock %}

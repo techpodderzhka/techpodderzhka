@@ -1,0 +1,43 @@
+{% extends "base.html" %} {% load static %} {% block title %}Мои
+заявки{%endblock%} {% block content %}
+<h2>Мои заявки</h2>
+
+{% if assignments %}
+<table class="form-table">
+  <thead>
+    <tr>
+      <th>Категория</th>
+      <th>Комментарий</th>
+      <th>Дата назначения</th>
+      <th>Статус</th>
+      <th>Действия</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for a in assignments %}
+    <tr>
+      <td>{{ a.form.category }}</td>
+      <td>{{ a.form.comment }}</td>
+      <td>{{ a.assigned_at|date:"d.m.Y H:i" }}</td>
+      <td>
+        <span
+          class="status-box {% if a.status == 'обрабатывается' %}yellow{% elif a.status == 'не назначен' %}red{% elif a.status == 'завершен' %}green{% endif %}"
+        >
+          {{ a.status }}
+        </span>
+      </td>
+      <td>
+        <a
+          href="{% url 'employee_form_detail' a.form.form_id %}"
+          class="btn btn-info"
+          >Перейти</a
+        >
+      </td>
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>У вас нет назначенных заявок.</p>
+{% endif %} {% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="content">
+  <div class="form-container">
+    <h2>Оставьте заявку</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="id_name">Имя</label>
+        {{ form.name }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_email">Электронная почта</label>
+        {{ form.email }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_phone">Номер телефона</label>
+        {{ form.phone }}
+      </div>
+
+      <div class="form-group">
+        <label for="id_category">Категория</label>
+        <select name="category" id="id_category">
+          <option value="Проблемы с интернетом">Проблемы с интернетом</option>
+          <option value="Проблемы с периферийным оборудованием">
+            Проблемы с периферийным оборудованием
+          </option>
+          <option value="Проблемы с электронной почтой">
+            Проблемы с электронной почтой
+          </option>
+          <option value="Другие проблемы">Другие проблемы</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="id_comment">Комментарий</label>
+        {{ form.comment }}
+      </div>
+
+      <button type="submit">Отправить</button>
+    </form>
+
+    {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+      <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

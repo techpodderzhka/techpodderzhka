@@ -1,0 +1,67 @@
+{% extends "base.html" %} {% load static %} {% block title %} Список заявок
+{%endblock%} {% block content %}
+<h2>Список заявок</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Категория</th>
+      <th>Комментарий</th>
+      <th>Дата подачи</th>
+      <th>Дата назначения</th>
+      <th>Статус</th>
+      <th>Дата завершения</th>
+      <th>Назначенный сотрудник</th>
+      <th>Действия</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for form in forms %}
+    <tr>
+      <td>{{ form.form_id }}</td>
+      <td>{{ form.category }}</td>
+      <td>{{ form.comment }}</td>
+      <td>{{ form.submitted_at|date:"d.m.Y H:i" }}</td>
+      <td>{{ form.latest_assignment_assigned_at|date:"d.m.Y H:i" }}</td>
+
+      <td>
+        <span
+          class="status-box {% if form.latest_assignment_status %} {% if form.latest_assignment_status == 'обрабатывается' %}yellow {% elif form.latest_assignment_status == 'не назначен' %}red {% elif form.latest_assignment_status == 'завершен' %}green {% endif %} {% else %} {% if form.status == 'обрабатывается' %}yellow {% elif form.status == 'не назначен' %}red {% elif form.status == 'завершен' %}green {% endif %} {% endif %}"
+        >
+          {{ form.latest_assignment_status|default:form.status }}
+        </span>
+      </td>
+      <td>
+        {{ form.latest_assignment_finished_at|date:"d.m.Y H:i"|default:"—" }}
+      </td>
+      <td>
+        {% if form.assigned_employee_name and form.assigned_employee_surname %}
+        {{ form.assigned_employee_name }} {{ form.assigned_employee_surname }}
+        {% else %} — {% endif %}
+      </td>
+      <td>
+        <a href="{% url 'form_detail_assign' form.form_id %}">Перейти</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  th {
+    background-color: #f2f2f2;
+    text-align: left;
+  }
+</style>
+
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{%load static%}
+{% block title %}Назначение заявки{% endblock %}
+
+{% block content %}
+
+<div class="form-detail-content">
+    <h2>Заявка #{{ form.form_id }}</h2>
+    <ul>
+    <li><strong>Имя:</strong> {{ form.name }}</li>
+    <li><strong>Email:</strong> {{ form.email }}</li>
+    <li><strong>Телефон:</strong> {{ form.phone }}</li>
+    <li><strong>Категория:</strong> {{ form.category }}</li>
+    <li><strong>Комментарий пользователя:</strong> {{ form.comment }}</li>
+    <li><strong>Дата подачи:</strong> {{ form.submitted_at|date:"d.m.Y H:i" }}</li>
+    <li><strong>Статус:</strong> {{ form.status }}</li>
+    </ul>
+
+    <h3>Назначения</h3>
+    {% if assignments %}
+    <table>
+    <thead>
+        <tr>
+        <th>Сотрудник</th>
+        <th>Статус</th>
+        <th>Дата назначения</th>
+        <th>Дата завершения</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in assignments %}
+        <tr>
+        <td>{{ a.employee }}</td>
+        <td>{{ a.status }}</td>
+        <td>{{ a.assigned_at|date:"d.m.Y H:i" }}</td>
+        <td>{% if a.finished_at %}{{ a.finished_at|date:"d.m.Y H:i" }}{% else %}—{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    {% else %}
+    <p>Назначений ещё нет.</p>
+    {% endif %}
+
+    <h3>Назначить сотрудника</h3>
+    <form method="post">
+    {% csrf_token %}
+    <label for="employee">Выберите сотрудника:</label>
+    <select name="employee" id="employee" required>
+        <option value="">-- Выберите сотрудника --</option>
+        {% for emp in employees %}
+        <option value="{{ emp.pk }}">{{ emp }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Назначить</button>
+    </form>
+
+    <a href="{% url 'forms_list' %}">← Назад к списку заявок</a>
+
+    {% if messages %}
+    <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}
